@@ -98,14 +98,24 @@ def normalize(df):
 
 ###########################################################################################################
 
-def clense_data(df, stand = False, norm = False, cat = False): 
-    new_df = df
+def clense_data(df, stand = False, norm = False, cat = False, classification= None ): 
+    if classification:
+        new_df = df.loc[:, df.columns != classification ]
+        temp = df.loc[:, df.columns == classification]
+        temp1 = True
+    else:
+        new_df = df
+        temp1 = False
+        
     if cat:
         new_df = cat_to_useful(new_df)
     if stand: 
         new_df = standardize(new_df)
     if norm:
         new_df = normalize(new_df)
+    if temp1: 
+        return pd.concat([new_df,temp], axis=1)
+    
     return new_df 
 
 ###########################################################################################################
