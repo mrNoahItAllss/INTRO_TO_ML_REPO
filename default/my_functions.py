@@ -2,6 +2,9 @@
 from sklearn import preprocessing 
 import os
 import pandas as pd
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+from sklearn import decomposition, datasets
+
 
 ###########################################################################################################
 
@@ -153,3 +156,23 @@ def create_data_table(dfs, titles=None, spreadsheet_name = 'default', path = Non
     return
         
 ###########################################################################################################
+
+# Accuracy, Recall and Percision Func
+# Required Imports: clasification_report 
+# INPUTS: Y, Y_pred OUTPUTS: accuracy, Recall, Percision
+def class_report( Y, Y_pred):
+    results = classification_report(Y, Y_pred, output_dict=True)
+    return results['accuracy'], results['macro avg']['recall'], results['macro avg']['precision']
+
+###########################################################################################################
+
+# PCA Function
+# Required imports: decomposition, datasets
+# INPUTS: DataFrame X values, K- The # of Dementions
+def DemReduction(df, K, Y_name):
+
+    X = df.loc[:, df.columns != Y_name ]
+    pca = decomposition.PCA(n_components=K)
+    df_red = pca.fit_transform(X)
+    df_red= pd.concat([pd.DataFrame(df_red),pd.DataFrame(df.loc[:, df.columns == Y_name ])], axis = 1)
+    return df_red
