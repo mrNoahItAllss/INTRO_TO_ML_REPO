@@ -4,6 +4,7 @@ import os
 import pandas as pd
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 from sklearn import decomposition, datasets
+from sklearn.model_selection import train_test_split
 
 
 ###########################################################################################################
@@ -176,3 +177,12 @@ def DemReduction(df, K, Y_name):
     df_red = pca.fit_transform(X)
     df_red= pd.concat([pd.DataFrame(df_red),pd.DataFrame(df.loc[:, df.columns == Y_name ])], axis = 1)
     return df_red
+
+
+###########################################################################################################
+
+
+def SplitData(df, Y_name, split= .2, rand_state = 0):
+    X = df.loc[:, df.columns != Y_name ]
+    Y = df.loc[:, df.columns == Y_name]
+    return train_test_split(X, Y, test_size=split, random_state=rand_state)
